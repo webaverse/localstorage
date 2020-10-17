@@ -58,10 +58,10 @@ const _message = e => {
           case 'get': {
             const {key} = j;
             const s = await localforage.getItem(key);
-            const j = JSON.parse(s);
+            const result = JSON.parse(s);
             port.postMessage({
               id,
-              result: j,
+              result,
             });
             break;
           }
