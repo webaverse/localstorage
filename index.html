@@ -37,7 +37,7 @@ export default storage; */
 
 const _message = e => {
   console.log('got message outer', e.data);
-  const j = JSON.parse(e.data);
+  const j = e.data;
   if (j && j._localstorage && typeof j.url === 'string') {
     window.removeEventListener('message', _message);
 
