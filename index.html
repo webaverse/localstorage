@@ -1,39 +1,9 @@
 <!doctype html>
 <html>
 <body>
+<input type=button value="Clear" id=clear-button>
 <script type=module>
 import localforage from './localforage.js';
-
-/* const tempStorage = {};
-
-const storage = {
-  async get(k) {
-    const s = await localforage.getItem(k);
-    return typeof s === 'string' ? JSON.parse(s) : s;
-  },
-  async getRaw(k) {
-    return await localforage.getItem(k);
-  },
-  async set(k, v) {
-    await localforage.setItem(k, JSON.stringify(v));
-  },
-  async setRaw(k, v) {
-    await localforage.setItem(k, v);
-  },
-  async remove(k) {
-    await localforage.removeItem(k);
-  },
-  async keys() {
-    return await localforage.keys();
-  },
-  async getRawTemp(k) {
-    return tempStorage[k];
-  },
-  async setRawTemp(k, v) {
-    tempStorage[k] = v;
-  },
-};
-export default storage; */
 
 const _message = e => {
   const url = new URL(e.origin);
@@ -86,6 +56,11 @@ const _message = e => {
   }
 };
 window.addEventListener('message', _message);
+
+const clearButton = document.getelementById('clear-id');
+clearButton.addEventListener('click', e => {
+  localforage.clear();
+});
 </script>
 </body>
 </html>
