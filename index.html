@@ -49,7 +49,8 @@ const _message = e => {
       channel.port1.onmessage = e => {
         cosole.log('got message inner', e.data);
       };
-      window.postMessage({
+      console.log('post message', window.parent, url.protocol + '//' + url.host);
+      window.parent.postMessage({
         _localstorage: true,
         port: channel.port2,
       }, url.protocol + '//' + url.host, [channel.port2]);
