@@ -41,8 +41,12 @@ const _message = e => {
   console.log('got message outer', e.data);
   const j = e.data;
   if (j && j._localstorage && j.port) {
-    console.log('messaging');
-    j.port.postMessage({woot: 'toot'});
+    console.log('messaging inner');
+    const {port} = j;
+    port.onmessage = e => {
+      console.log('got message inner', e.data);
+    };
+    port.postMessage({woot: 'toot'});
   }
 };
 window.addEventListener('message', _message);
