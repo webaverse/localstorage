@@ -49,7 +49,7 @@ const _message = e => {
           case 'get': {
             const {key} = j;
             const s = await localforage.getItem(key);
-            const result = JSON.parse(s);
+            const result = typeof s === 'string' ? JSON.parse(s) : null;
             console.log('localstorage response', e.data, result);
             port.postMessage({
               id,
