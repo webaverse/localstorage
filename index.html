@@ -35,6 +35,8 @@ const storage = {
 };
 export default storage; */
 
+console.log('iframe load inner');
+
 const _message = e => {
   console.log('got message outer', e.data);
   const j = e.data;
