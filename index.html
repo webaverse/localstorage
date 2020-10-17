@@ -35,15 +35,20 @@ const storage = {
 };
 export default storage; */
 
-if (window.parent && /^127\.0\.0\.1(?::|$)|(?:[^\.]+\.)?webaverse.com/.test(window.parent.location.host)) {
-	const channel = new MessageChannel();
-	channel.port1.onmessage = e => {
-    cosole.log('got message', e.data);
-	};
-	window.parent.postMesage({
-		port: channel.port2,
-	}, window.parent.location.host, [channel.port2]);
-}
+window.addEventListener('message', e => {
+  console.log('got message outer', e.data);
+  const j = JSON.parse(e.data);
+  const url = j ? new URL(j.url) : null;
+  if (url && /^127\.0\.0\.1(?::|$)|(?:[^\.]+\.)?webaverse.com/.test(url.host)) {
+    const channel = new MessageChannel();
+    channel.port1.onmessage = e => {
+      cosole.log('got message inner', e.data);
+    };
+    window.parent.postMesage({
+      port: channel.port2,
+    }, window.parent.location.host, [channel.port2]);
+  }
+}, {once: true});
 </script>
 </body>
 </html>
