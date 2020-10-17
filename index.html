@@ -49,7 +49,7 @@ const _message = e => {
       channel.port1.onmessage = e => {
         cosole.log('got message inner', e.data);
       };
-      window.postMesage({
+      window.postMessage({
         _localstorage: true,
         port: channel.port2,
       }, url.host, [channel.port2]);
