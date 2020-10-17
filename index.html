@@ -65,6 +65,15 @@ const _message = e => {
             });
             break;
           }
+          case 'remove': {
+            const {key} = j;
+            const s = await localforage.removeItem(key);
+            port.postMessage({
+              id,
+              result: null,
+            });
+            break;
+          }
         }
       };
       // port.postMessage({woot: 'toot'});
