@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<body>
+<script>
+if (/^127\.0\.0\.1(?::|$)|(?:[^\.]+\.)?webaverse.com/.test(window.parent.location.host)) {
+	const channel = new MessageChannel();
+	channel.port1.onmessage = e => {
+    cosole.log('got message', e.data);
+	};
+	parent.postMesage({
+		port: channel.port2,
+	}, window.parent.location.host, [channel.port2]);
+}
+</script>
+</body>
+</html>
