@@ -35,37 +35,40 @@ const storage = {
 };
 export default storage; */
 
-const _message = e => {;
-  const j = e.data;
-  if (j && j._localstorage && j.port) {
-    const {port} = j;
-    port.onmessage = async e => {
-      // console.log('got message inner', e.data);
-      const j = e.data;
-      const {method, id} = j;
-      switch (method) {
-        case 'set': {
-          const {key, value} = j;
-          await localforage.setItem(key, JSON.stringify(value));
-          port.postMessage({
-            id,
-            result: null,
-          });
-          break;
+const _message = e => {
+  const url = new URL(e.origin);
+  if (url && /^127\.0\.0\.1(?::|$)|app\.webaverse\.com/.test(url.host)) {
+    const j = e.data;
+    if (j && j._localstorage && j.port) {
+      const {port} = j;
+      port.onmessage = async e => {
+        // console.log('got message inner', e.data);
+        const j = e.data;
+        const {method, id} = j;
+        switch (method) {
+          case 'set': {
+            const {key, value} = j;
+            await localforage.setItem(key, JSON.stringify(value));
+            port.postMessage({
+              id,
+              result: null,
+            });
+            break;
+          }
+          case 'get': {
+            const {key} = j;
+            const s = await localforage.getItem(key);
+            const j = JSON.parse(s);
+            port.postMessage({
+              id,
+              result: j,
+            });
+            break;
+          }
         }
-        case 'get': {
-          const {key} = j;
-          const s = await localforage.getItem(key);
-          const j = JSON.parse(s);
-          port.postMessage({
-            id,
-            result: j,
-          });
-          break;
-        }
-      }
-    };
-    // port.postMessage({woot: 'toot'});
+      };
+      // port.postMessage({woot: 'toot'});
+    }
   }
 };
 window.addEventListener('message', _message);
