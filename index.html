@@ -35,18 +35,37 @@ const storage = {
 };
 export default storage; */
 
-console.log('iframe load inner');
-
-const _message = e => {
-  console.log('got message outer', e.data);
+const _message = e => {;
   const j = e.data;
   if (j && j._localstorage && j.port) {
-    console.log('messaging inner');
     const {port} = j;
-    port.onmessage = e => {
-      console.log('got message inner', e.data);
+    port.onmessage = async e => {
+      // console.log('got message inner', e.data);
+      const j = e.data;
+      const {method, id} = j;
+      switch (method) {
+        case 'set': {
+          const {key, value} = j;
+          await localforage.setItem(key, JSON.stringify(value));
+          port.postMessage({
+            id,
+            result: null,
+          });
+          break;
+        }
+        case 'get': {
+          const {key} = j;
+          const s = await localforage.getItem(key);
+          const j = JSON.parse(s);
+          port.postMessage({
+            id,
+            result: j,
+          });
+          break;
+        }
+      }
     };
-    port.postMessage({woot: 'toot'});
+    // port.postMessage({woot: 'toot'});
   }
 };
 window.addEventListener('message', _message);
