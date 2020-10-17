@@ -52,7 +52,7 @@ const _message = e => {
       window.postMessage({
         _localstorage: true,
         port: channel.port2,
-      }, url.host, [channel.port2]);
+      }, url.protocol + '//' + url.host, [channel.port2]);
     }
   }
 };
