@@ -42,23 +42,26 @@ const _message = e => {
     if (j && j._localstorage && j.port) {
       const {port} = j;
       port.onmessage = async e => {
-        // console.log('got message inner', e.data);
+        console.log('localstorage request', e.data);
         const j = e.data;
         const {method, id} = j;
         switch (method) {
-          case 'set': {
-            const {key, value} = j;
-            await localforage.setItem(key, JSON.stringify(value));
-            port.postMessage({
-              id,
-              result: null,
-            });
-            break;
-          }
           case 'get': {
             const {key} = j;
             const s = await localforage.getItem(key);
             const result = JSON.parse(s);
+            console.log('localstorage response', e.data, result);
+            port.postMessage({
+              id,
+              result,
+            });
+            break;
+          }
+          case 'set': {
+            const {key, value} = j;
+            await localforage.setItem(key, JSON.stringify(value));
+            const result = null;
+            console.log('localstorage response', e.data, result);
             port.postMessage({
               id,
               result,
@@ -68,9 +71,11 @@ const _message = e => {
           case 'remove': {
             const {key} = j;
             const s = await localforage.removeItem(key);
+            const result = null;
+            console.log('localstorage response', e.data, result);
             port.postMessage({
               id,
-              result: null,
+              result,
             });
             break;
           }
