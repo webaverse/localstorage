@@ -48,6 +48,7 @@ const _message = e => {
         cosole.log('got message inner', e.data);
       };
       window.parent.postMesage({
+        _localstorage: true,
         port: channel.port2,
       }, window.parent.location.host, [channel.port2]);
     }
