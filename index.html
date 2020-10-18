@@ -6,43 +6,40 @@
 import localforage from './localforage.js';
 
 let memoryStorage = {};
-localforage.getItem = (getItem => function(key) {
+localforage.getItem = (getItem => async function(key) {
   try {
-    return getItem.apply(this, arguments);
+    return await getItem.apply(this, arguments);
   } catch(err) {
     console.warn(err);
     let result =  memoryStorage[key];
     if (result === undefined) {
       result = null;
     }
-    return Promise.resolve(result);
+    return result;
   }
 })(localforage.getItem);
-localforage.setItem = (setItem => function(key, value) {
+localforage.setItem = (setItem => async function(key, value) {
   try {
-    return setItem.apply(this, arguments);
+    return await setItem.apply(this, arguments);
   } catch(err) {
     console.warn(err);
     memoryStorage[key] = value;
-    return Promise.resolve();
   }
 })(localforage.setItem);
-localforage.removeItem = (removeItem => function(key) {
+localforage.removeItem = (removeItem => async function(key) {
   try {
-    return removeItem.apply(this, arguments);
+    return await removeItem.apply(this, arguments);
   } catch(err) {
     console.warn(err);
     delete memoryStorage[key];
-    return Promise.resolve();
   }
 })(localforage.removeItem);
-localforage.clear = (clear => function() {
+localforage.clear = (clear => async function() {
   try {
-    return clear.apply(this, arguments);
+    return await clear.apply(this, arguments);
   } catch(err) {
     console.warn(err);
     memoryStorage = {};
-    return Promise.resolve();
   }
 })(localforage.clear);
 
