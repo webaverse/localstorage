@@ -12,17 +12,17 @@ const loadPromise = localforage.ready()
 
     let memoryStorage = {};
     return {
-      async get(key) {
+      async getItem(key) {
         let result =  memoryStorage[key];
         if (result === undefined) {
           result = null;
         }
         return result;
       },
-      async set(key, value) {
+      async setItem(key, value) {
         memoryStorage[key] = value;
       },
-      async remove(key) {
+      async removeItem(key) {
         delete memoryStorage[key];
       },
       async clear() {
