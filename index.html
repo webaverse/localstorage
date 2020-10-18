@@ -5,43 +5,32 @@
 <script type=module>
 import localforage from './localforage.js';
 
-let memoryStorage = {};
-localforage.getItem = (getItem => async function(key) {
-  try {
-    return await getItem.apply(this, arguments);
-  } catch(err) {
+const loadPromise = localforage.ready()
+  .then(() => localforage)
+  .catch(err => {
     console.warn(err);
-    let result =  memoryStorage[key];
-    if (result === undefined) {
-      result = null;
-    }
-    return result;
-  }
-})(localforage.getItem);
-localforage.setItem = (setItem => async function(key, value) {
-  try {
-    return await setItem.apply(this, arguments);
-  } catch(err) {
-    console.warn(err);
-    memoryStorage[key] = value;
-  }
-})(localforage.setItem);
-localforage.removeItem = (removeItem => async function(key) {
-  try {
-    return await removeItem.apply(this, arguments);
-  } catch(err) {
-    console.warn(err);
-    delete memoryStorage[key];
-  }
-})(localforage.removeItem);
-localforage.clear = (clear => async function() {
-  try {
-    return await clear.apply(this, arguments);
-  } catch(err) {
-    console.warn(err);
-    memoryStorage = {};
-  }
-})(localforage.clear);
+
+    let memoryStorage = {};
+    return {
+      async get(key) {
+        let result =  memoryStorage[key];
+        if (result === undefined) {
+          result = null;
+        }
+        return result;
+      },
+      async set(key, value) {
+        memoryStorage[key] = value;
+      },
+      async remove(key) {
+        delete memoryStorage[key];
+      },
+      async clear() {
+        console.warn(err);
+        memoryStorage = {};
+      },
+    };
+  });
 
 const _message = e => {
   const url = new URL(e.origin);
@@ -50,6 +39,8 @@ const _message = e => {
     if (j && j._localstorage && j.port) {
       const {port} = j;
       port.onmessage = async e => {
+        const localforage = await loadPromise;
+
         // console.log('localstorage request', e.data);
         const j = e.data;
         const {method, id} = j;
