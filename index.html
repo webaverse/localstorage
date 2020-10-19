@@ -82,7 +82,7 @@ const _message = e => {
       };
     }
   } else {
-    console.warn('localstorage: refusing to communicate with non-whitelist origin', url);
+    console.warn('localstorage: refusing to communicate with non-whitelisted origin', url);
   }
 };
 window.addEventListener('message', _message);
