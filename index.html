@@ -82,7 +82,11 @@ const _message = e => {
       };
     }
   } else {
-    console.warn('localstorage: refusing to communicate with non-whitelisted origin', url);
+    if (url && url.host === location.host) {
+      // message to self; ignore
+    } else {
+      console.warn('localstorage: refusing to communicate with non-whitelisted origin', url);
+    }
   }
 };
 window.addEventListener('message', _message);
