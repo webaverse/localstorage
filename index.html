@@ -4,6 +4,7 @@
 <input type=button value="Clear" id=clear-button>
 <script type=module>
 import localforage from './localforage.js';
+window.localforage = localforage;
 
 const loadPromise = localforage.ready()
   .then(() => localforage)
