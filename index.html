@@ -94,8 +94,7 @@ window.addEventListener('message', _message);
 
 window.parent.postMessage({
   _localstorage: true,
-  // port: channel.port2,
-}, '*', /*[channel.port2]*/);
+}, '*');
 
 const clearButton = document.getElementById('clear-button');
 clearButton.addEventListener('click', e => {
