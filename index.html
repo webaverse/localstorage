@@ -92,9 +92,9 @@ const _message = e => {
 };
 window.addEventListener('message', _message);
 
-window.parent.postMessage({
+/* window.parent.postMessage({
   _localstorage: true,
-}, '*');
+}, '*'); */
 
 const clearButton = document.getElementById('clear-button');
 clearButton.addEventListener('click', e => {
