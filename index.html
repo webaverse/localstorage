@@ -35,7 +35,7 @@ const loadPromise = localforage.ready()
 
 const _message = e => {
   const url = new URL(e.origin);
-  if (url && /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app|local)\.webaverse\.com/.test(url.host)) {
+  if (url && /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app|local)\.webaverse\.com|webaverse\.com/.test(url.host)) {
     const j = e.data;
     if (j && j._localstorage && j.port) {
       const {port} = j;
