@@ -33,21 +33,31 @@ const loadPromise = localforage.ready()
     };
   });
 
+const trusted = /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app\.|local\.)?webaverse\.com|webaverse\.link/
+const github = /github\.dev$/
+
 const _message = e => {
   const url = new URL(e.origin);
-  if (url && /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app\.|local\.)?webaverse\.com|webaverse\.link/.test(url.host)) {
+  const gh = github.test(url.host)
+  const allowed = trusted.test(url.host) || gh
+
+  if (url && allowed) {
     const j = e.data;
     if (j && j._localstorage && j.port) {
       const {port} = j;
       port.onmessage = async e => {
         const localforage = await loadPromise;
 
+        const prefix = gh ? `${url.host}-` : ""
+
         // console.log('localstorage request', e.data);
         const j = e.data;
         const {method, id} = j;
+        const key = `${prefix}${j.key}`
+
         switch (method) {
           case 'get': {
-            const {key} = j;
+        
             const s = await localforage.getItem(key);
             const result = typeof s === 'string' ? JSON.parse(s) : null;
             // console.log('localstorage response', e.data, result);
@@ -58,7 +68,7 @@ const _message = e => {
             break;
           }
           case 'set': {
-            const {key, value} = j;
+            const {value} = j;
             await localforage.setItem(key, JSON.stringify(value));
             const result = null;
             // console.log('localstorage response', e.data, result);
@@ -69,7 +79,6 @@ const _message = e => {
             break;
           }
           case 'remove': {
-            const {key} = j;
             const s = await localforage.removeItem(key);
             const result = null;
             // console.log('localstorage response', e.data, result);
