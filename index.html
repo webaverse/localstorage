@@ -33,13 +33,13 @@ const loadPromise = localforage.ready()
     };
   });
 
-const trusted = /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app\.|local\.)?webaverse\.com|webaverse\.link/
-const github = /githubpreview\.dev$/
+const trusted = /^127\.0\.0\.1(?::|$)|localhost(?::|$)|(?:app\.|local\.)?webaverse\.com|webaverse\.link/;
+const github = /\.githubpreview\.dev$/;
 
 const _message = e => {
   const url = new URL(e.origin);
-  const gh = github.test(url.host)
-  const allowed = trusted.test(url.host) || gh
+  const gh = github.test(url.host);
+  const allowed = trusted.test(url.host) || gh;
 
   if (url && allowed) {
     const j = e.data;
@@ -48,7 +48,7 @@ const _message = e => {
       port.onmessage = async e => {
         const localforage = await loadPromise;
 
-        const prefix = gh ? `${url.host}-` : ""
+        const prefix = gh ? `${url.host}-` : "";
 
         // console.log('localstorage request', e.data);
         const j = e.data;
